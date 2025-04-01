@@ -1,0 +1,80 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+
+header {
+    display: flex;
+    padding: 1.3rem 2rem;
+    justify-content: space-between;
+}
+
+
+/* MAIN */
+main {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    height: 100%;
+}
+
+
+/* MENU-SECTION */
+main .menuSection {
+    background-color: var(--secondary-bg);
+    border-right: 1px solid #ccc6a5;
+    text-transform: uppercase;
+}
+
+main .menuSection .op {
+    border-bottom: 1px solid #ccc6a5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+main .menuSection .loginAs {
+    padding: 2rem 0;
+    align-items: center;
+}
+main .menuSection .loginAs p {
+    text-transform: capitalize;
+    font-size: 0.9rem;
+    line-height: 0.9;
+}
+
+main .menuSection .menu {
+    padding: 1rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+main .menuSection .menu:hover,
+main .menuSection .menu:active {
+    background-color: var(--dark-text);
+    color: var(--secondary-bg);
+}
+
+main .menuSection .addNewIntern {
+    background-color: var(--dark-text);
+    color: var(--secondary-bg);
+    border-radius: 5px;
+    width: 70%;
+    margin: 2rem auto;
+    padding: 0.7rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+main .menuSection .addNewIntern:hover {
+    background-color: var(--accent);
+    color: var(--dark-text);
+}
+
+
+/* DISPLAY-SECTION */
+main .displaySection {
+    background-color: var(--secondary-bg);
+}

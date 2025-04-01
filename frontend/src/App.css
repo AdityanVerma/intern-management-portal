@@ -1,0 +1,41 @@
+:root {
+  --light-bg: #F8F3D9;
+  --secondary-bg: #EBE5C2;
+  --accent: #B9B28A;
+  --dark-text: #504B38;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--light-bg);
+  color: var(--dark-text);
+}
+
+header {
+  background-color: var(--dark-text);
+  color: var(--light-bg);
+}
+
+button {
+  background-color: var(--accent);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+button:hover {
+  background-color: var(--dark-text);
+}
+
+.card {
+  background-color: #D8D2C2;
+  color: #4A4947;
+  border: 1px solid #B17457;
+}

@@ -1,0 +1,32 @@
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+
+const app = express();
+
+// Configuring cors middleware
+app.use(
+    cors({
+        origin: process.env.CORS_ORIGIN,
+        credentials: true,
+    })
+); // To allow data access to specific request or every request coming
+
+app.use(express.json({ limit: "16kb" })); // To identify data coming from json file (JSON Body Parsing Middleware)
+app.use(express.urlencoded({ extended: true, limit: "16kb" })); // To identify data coming from ULRs (URL-Encoded Data Parsing Middleware)
+app.use(express.static("public")); // To serve static files like images, PDFs, CSS files, etc. (Static File Serving Middleware)
+
+app.use(cookieParser());
+/* (Cookie Parsing Middleware)
+    Purpose: To parse cookies from incoming requests and populate them in req.cookies.
+    Essential for handling sessions or authentication tokens.
+*/
+
+
+// routes import
+// ...
+
+// routes declaration
+// ...
+
+export { app };

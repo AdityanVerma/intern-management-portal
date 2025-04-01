@@ -1,0 +1,33 @@
+{} --> contains universal information
+() --> contains specific login system only information
+[] --> contains exclusive login system information
+
+INTERN-MANAGEMENT-SYSTEM need:
+
+Two login interface
+	|--> HR Login
+	|--> Mentor Login
+
+
+
+>> HR Login can access
+	|--> Add New Intern* {contains --> CSV (excel file), Form} [Exclusive to HR only] \refer training/intenship registration form\
+	|--> New Intern (have actions to assign mentor from mentor list)
+	|--> Undergoing 
+	|--> Completed
+	|--> Certificate Issued* (have action to issue certificate to the student) [Exclusive to HR only]
+
+
+
+
+>> Mentor Login can access
+	|--> New Intern (have actions to accept or reject the intern assign to them)
+	|--> Undergoing (have actions to modify status like complition, remarks, attendence, project submision, etc.) \refer training completion report form\
+	|--> Completed
+
+
+
+
+--> New intern {contain list of students selected}
+--> Undergoing {conatins the list of undergoing students in internship}
+--> Completed {contains the list of students completed there internsip}
