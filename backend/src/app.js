@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+// ---> Middlewares
 // Configuring cors middleware
 app.use(
     cors({
@@ -23,6 +24,7 @@ app.use(cookieParser());
 */
 
 
+// ---> Routes
 // routes import
 // ...
 
