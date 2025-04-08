@@ -1,24 +1,25 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/user.controller.js";
-import { upload } from "../middlewares/multer.middleware.js";
-// import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { authorizeRole } from "../middlewares/role.middleware.js";
 
 const router = Router();
 
-router.route("/register").post(
-    upload.fields([
-        {
-            name: "avatar",
-            maxCount: 1,
-        },
-    ]),
-    registerUser
-);
+// To get user information
+router.route("/me").get(verifyJWT, (req, res) => {
+    res.json({
+        user: req.user,
+        message: `Logged in as ${req.user.role}`,
+    });
+});
 
-// router.route("/login").post(loginUser);
+// login route only "hr" can access
+router.route("/hr").get(verifyJWT, authorizeRole("hr"), (_, res) => {
+    res.json({ message: "Welcome HR!!" });
+});
 
-// secured routes
-// router.route("/logout").post(verifyJWT, logoutUser);
-// router.route("/refresh-token").post(refreshAccessToken);
+// login route only "mentor" can access
+router.route("/mentor").get(verifyJWT, authorizeRole("mentor"), (_, res) => {
+    res.json({ message: "Welcome Mentor!!" });
+});
 
 export default router;
