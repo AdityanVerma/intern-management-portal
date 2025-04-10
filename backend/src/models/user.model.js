@@ -2,6 +2,8 @@ import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
+const ROLES = ["hr", "mentor"];
+
 const userSchema = new Schema(
     {
         username: {
@@ -22,25 +24,27 @@ const userSchema = new Schema(
             unique: true,
             lowercase: true,
             trim: true,
+            index: true,
         },
         fullName: {
             type: String,
             required: true,
             trim: true,
-            index: true,
         },
         avatar: {
             type: String, // cloudinary url
         },
         role: {
             type: String,
-            enum: ["hr", "mentor"],
+            enum: ROLES,
             required: true,
         },
-        department: {
-            type: String,
-            default: null, // Only applicable if role === 'mentor'
-            index: true,
+        departmentId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Department",
+            required: function () {
+                return this.role === "mentor"; // only required for mentors
+            },
         },
         refreshToken: {
             type: String,
