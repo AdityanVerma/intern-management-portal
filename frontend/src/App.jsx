@@ -1,13 +1,15 @@
 // import { useState } from 'react'
 import "./App.css";
-// import HRPage from "./pages/HRPage/HRPage.jsx";
-import Login from "./pages/login/Login.jsx";
+// import Login from "./pages/login/Login.jsx";
+import HRPage from "./pages/HRPage/HRPage.jsx";
+// import MentorPage from "./pages/MentorPage/MentorPage.jsx";
 
 function App() {
   return (
     <>
-      {/* <HRPage /> */}
-      <Login />
+      {/* <Login /> */}
+      <HRPage />
+      {/* <MentorPage /> */}
     </>
   );
 }

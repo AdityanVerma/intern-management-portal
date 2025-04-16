@@ -1,0 +1,54 @@
+.container {
+    height: 100vh;
+}
+
+header {
+    display: flex;
+    padding: 1.3rem 2rem;
+    justify-content: space-between;
+}
+
+/* FORM-SECTION */
+.form-container {
+    height: 90%;
+    align-items: center;
+}
+
+.login-form {
+    border: 2px solid var(--dark-text);
+    width: 20vw;
+    max-height: 100vh;
+    min-width: 300px; /* fallback for very small viewports */
+    background-color: var(--light-bg);
+    display: flex;
+    flex-direction: column;
+}
+
+
+.login-form h1 {
+    background-color: var(--dark-text);
+    color: var(--light-bg);
+    padding: 0.5em 0.8em;
+}
+
+
+.form-section {
+    padding: 1.5em;
+}
+
+.form-section .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    color: var(--dark-text);
+    margin-bottom: 1em;
+}
+
+.form-section .form-group label {
+    font-size: 1.1em;
+}
+
+.form-section .form-group input {
+    font-size: 1.1em;
+    padding: 0.4em 0.3em;
+}

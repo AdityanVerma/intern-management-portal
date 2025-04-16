@@ -77,14 +77,4 @@ main .menuSection .addNewIntern:hover {
 /* DISPLAY-SECTION */
 main .displaySection {
     background-color: var(--secondary-bg);
-    padding: 1em;
-}
-
-main .displaySection table {
-    display: flex;
-    flex-direction: column;
-}
-
-main .displaySection table thead {
-    
 }
