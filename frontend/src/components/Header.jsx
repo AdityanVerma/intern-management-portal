@@ -1,17 +1,11 @@
 import "./Header.css";
 
-function Header() {
+function Header({ loginAs }) {
   return (
-    <>
-      <div className="container">
-
-        <header>
-          <h1>DRDO Internship Management Portal</h1>
-          <button className="btn">HR</button>
-        </header>
-
-      </div>
-    </>
+    <header>
+      <h1>DRDO Internship Management Portal</h1>
+      <button className="flex-cen-all login-btn">{loginAs}</button>
+    </header>
   );
 }
 

@@ -6,11 +6,6 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-    --light-bg: #F8F3D9;
-    --secondary-bg: #EBE5C2;
-    --accent: #B9B28A;
-    --dark-text: #504B38;
 }
 
 .flex {
@@ -20,4 +15,10 @@
 .flex-center {
     display: flex;
     justify-content: center;
+}
+
+.flex-cen-all {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

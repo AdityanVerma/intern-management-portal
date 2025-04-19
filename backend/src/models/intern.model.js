@@ -47,10 +47,13 @@ const internSchema = new Schema(
             type: String,
             required: true,
         },
+        department: {
+            type: String,
+            required: true,
+        },
         mentorId: {
             type: Schema.Types.ObjectId,
             ref: "User",
-            required: true,
         },
         internStatus: {
             type: String,

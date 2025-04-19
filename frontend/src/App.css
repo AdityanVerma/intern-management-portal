@@ -3,6 +3,7 @@
   --secondary-bg: #EBE5C2;
   --accent: #B9B28A;
   --dark-text: #504B38;
+  --border: #ccc6a5;
 }
 
 * {
@@ -22,16 +23,17 @@ header {
 }
 
 button {
-  background-color: var(--accent);
-  color: white;
-  padding: 12px 24px;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #ffffff00;
   border: none;
   cursor: pointer;
-  font-size: 18px;
+  width: 100%;
 }
 
-button:hover {
-  background-color: var(--dark-text);
+.screen-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .card {
