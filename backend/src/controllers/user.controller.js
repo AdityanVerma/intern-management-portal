@@ -96,6 +96,9 @@ const loginUser = asyncHandler(async (req, res) => {
     // ---> get user details from frontend using req body -> data
     const { username, email, password } = req.body;
 
+    // // Dev Check
+    // console.log("Login attempt:", { username, email, password });
+
     // ---> check by username or email
     if (!username && !email) {
         throw new ApiError(400, "username and email is required");
@@ -127,14 +130,16 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 
     // ---> send secure cookies
-    const loggedInUser = await User.findById(user._id,).select(
+    const loggedInUser = await User.findById(user._id).select(
         "-password -refreshToken"
     );
     const options = {
         httpOnly: true,
-        secure: true,
+        secure: false, // DevOnly
+        // secure: true, // Only work with https
     };
 
+    // // Dev Check
     console.log(" ->  Login Successful!!");
 
     // ---> return response
@@ -174,7 +179,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: true,
-    }; console.log(" ->  Logout Successful!!");
+    };
+    console.log(" ->  Logout Successful!!");
     return res
         .status(200)
         .clearCookie("accessToken", options)
@@ -261,7 +267,13 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res
         .status(200)
-        .json(200, req.user, "Current user fetched successfully");
+        .json(
+            new ApiResponse(
+                200,
+                { user: req.user },
+                "Current user fetched successfully"
+            )
+        );
 });
 
 export {

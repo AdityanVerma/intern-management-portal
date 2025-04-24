@@ -9,7 +9,7 @@ const app = express();
 app.use(
     cors({
         // origin: process.env.CORS_ORIGIN,
-        origin: "http://localhost:5174",
+        origin: "http://localhost:5173",
         credentials: true,
     })
 ); // To allow data access to specific request or every request coming
@@ -35,4 +35,3 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 
 export { app };
-    
