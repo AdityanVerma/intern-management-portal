@@ -15,3 +15,7 @@ header .login-btn {
     padding: 12px 24px;
     font-size: 18px;
 }
+
+header .login-btn:disabled {
+    display: none;
+}

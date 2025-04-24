@@ -135,6 +135,8 @@ const loginUser = asyncHandler(async (req, res) => {
         secure: true,
     };
 
+    console.log(" ->  Login Successful!!");
+
     // ---> return response
     return res
         .status(200)
@@ -172,7 +174,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: true,
-    };
+    }; console.log(" ->  Logout Successful!!");
     return res
         .status(200)
         .clearCookie("accessToken", options)

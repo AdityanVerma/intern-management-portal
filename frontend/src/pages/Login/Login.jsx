@@ -1,21 +1,28 @@
+/* eslint-disable no-unused-vars */
+import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import "./Login.css";
 
-function Login() {
+export default function Login() {
   return (
     <>
       <div className="container">
-        <header>
-          <h1>DRDO Internship Management Portal</h1>
-        </header>
         <div className="form-container flex-center">
           <div className="login-form ">
             <h1>Login</h1>
 
             <div className="form-section">
+              {/* <form action="/login" method="POST" onSubmit={handleLogin}> */}
               <form action="/login" method="POST">
                 <div className="form-group">
                   <label htmlFor="username">Username</label>
-                  <input type="text" id="username" name="username" required />
+                  <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    // onChange={handleChange}
+                    required
+                  />
                 </div>
                 <div className="form-group">
                   <label htmlFor="password">Password</label>
@@ -23,14 +30,13 @@ function Login() {
                     type="password"
                     id="password"
                     name="password"
+                    // onChange={handleChange}
                     required
                   />
                 </div>
                 <button type="submit">Login</button>
+                {/* <button type="submit" disabled={loading}>{loading? "Logging In..." : "Login"}</button> */}
               </form>
-              {/* <p className="register-link">
-            Don't have an account? <a href="/register">Register here</a>
-            </p> */}
             </div>
           </div>
         </div>
@@ -38,5 +44,3 @@ function Login() {
     </>
   );
 }
-
-export default Login;

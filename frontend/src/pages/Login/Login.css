@@ -2,41 +2,33 @@
     height: 100vh;
 }
 
-header {
-    display: flex;
-    padding: 1.3rem 2rem;
-    justify-content: space-between;
-}
-
 /* FORM-SECTION */
 .form-container {
     height: 90%;
     align-items: center;
 }
 
-.login-form {
+.form-container .login-form {
     border: 2px solid var(--dark-text);
     width: 20vw;
     max-height: 100vh;
-    min-width: 300px; /* fallback for very small viewports */
+    min-width: 300px;
     background-color: var(--light-bg);
     display: flex;
     flex-direction: column;
 }
 
-
-.login-form h1 {
+.form-container .login-form h1 {
     background-color: var(--dark-text);
     color: var(--light-bg);
     padding: 0.5em 0.8em;
 }
 
-
-.form-section {
+.form-container .form-section {
     padding: 1.5em;
 }
 
-.form-section .form-group {
+.form-container .form-section .form-group {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
@@ -44,11 +36,28 @@ header {
     margin-bottom: 1em;
 }
 
-.form-section .form-group label {
+.form-container .form-section .form-group label {
     font-size: 1.1em;
 }
 
-.form-section .form-group input {
+.form-container .form-section .form-group input {
     font-size: 1.1em;
     padding: 0.4em 0.3em;
+}
+
+.form-container .form-section button {
+    background-color: var(--dark-text);
+    color: var(--secondary-bg);
+    text-transform: uppercase;
+    font-size: 1em;
+    border-radius: 5px;
+    margin: 2rem auto;
+    padding: 0.7rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.form-container .form-section button:hover {
+    background-color: var(--accent);
+    color: var(--dark-text);
 }

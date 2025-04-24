@@ -2,7 +2,7 @@
 import "./MentorPage.css";
 import Header from "../../components/Header.jsx";
 
-function HRPage() {
+function MentorPage() {
   return (
     <div className="screen-container">
       <Header loginAs="M" />
@@ -24,4 +24,4 @@ function HRPage() {
   );
 }
 
-export default HRPage;
+export default MentorPage;

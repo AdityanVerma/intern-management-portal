@@ -5,7 +5,7 @@ import Header from "../../components/Header.jsx";
 function HRPage() {
   return (
     <div className="screen-container">
-      <Header loginAs="HR" />
+      <Header loginAs="HR" isDisabled={true}/>
 
       <main>
         <section className="menuSection">

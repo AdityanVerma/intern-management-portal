@@ -6,8 +6,39 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    --light-bg: #F8F3D9;
+    --secondary-bg: #EBE5C2;
+    --accent: #B9B28A;
+    --dark-text: #504B38;
+    --border: #ccc6a5;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+}
+
+header {
+    background-color: var(--dark-text);
+    color: var(--light-bg);
+}
+
+button {
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    background-color: #ffffff00;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* UNIVERSAL CLASSES */
 .flex {
     display: flex;
 }
@@ -21,4 +52,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.screen-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.card {
+    background-color: #D8D2C2;
+    color: #4A4947;
+    border: 1px solid #B17457;
 }
