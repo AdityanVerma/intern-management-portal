@@ -39,6 +39,7 @@ main .menuSection .menu {
     padding: 1rem 1.5rem;
     font-weight: bold;
     cursor: pointer;
+    text-decoration: none;
 }
 main .menuSection .menu:hover,
 main .menuSection .menu:active {

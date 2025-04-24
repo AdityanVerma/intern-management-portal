@@ -1,13 +1,16 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import "./MentorPage.css";
-import Header from "../../components/Header.jsx";
+import Header from "../../components/Header/Header.jsx";
+import { NavLink, Outlet } from "react-router-dom";
 
 function MentorPage() {
-  // Fetch hr verification
+  // Fetch mentor verification
+  const [userId, setUserId] = useState({});
+
   useEffect(() => {
-    const fetchHRData = async () => {
+    const fetchMentorData = async () => {
       try {
-        const response = await fetch("http://localhost:7000/api/v1/users/mentor", {
+        const response = await fetch("http://localhost:7000/api/v1/auth/current-user", {
           method: "GET",
           credentials: "include",
           headers: {
@@ -16,13 +19,13 @@ function MentorPage() {
         });
 
         const data = await response.json();
-        console.log("Response:", data.message);
+        setUserId(data.data.user._id);
       } catch (error) {
-        console.error("❌ HR Page Error:", error.message);
+        console.error("❌ Error:", error.message);
       }
     };
 
-    fetchHRData();
+    fetchMentorData();
   }, []);
 
   return (
@@ -35,12 +38,29 @@ function MentorPage() {
             <p>Login As:</p>
             <h1>Mentor Name</h1>
           </div>
-          <div className="op menu active">New Interns</div>
-          <div className="op menu">Undergoing</div>
-          <div className="op menu">Completed</div>
+          <NavLink
+            to={`/user/${userId}/hr/interns`}
+            className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
+          >
+            New Interns
+          </NavLink>
+          <NavLink
+            to={`/user/${userId}/hr/interns`}
+            className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
+          >
+            Undergoing
+          </NavLink>
+          <NavLink
+            to={`/user/${userId}/hr/interns`}
+            className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
+          >
+            Completed
+          </NavLink>
         </section>
 
-        <section className="displaySection"></section>
+        <section className="displaySection">
+          <Outlet />
+        </section>
       </main>
     </div>
   );
