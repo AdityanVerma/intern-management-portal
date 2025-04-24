@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-var STATUS = ['new', 'undergoing', 'completed'];
+var STATUS = ['new', 'undergoing', 'certify', 'completed'];
 
 const internSchema = new Schema(
     {

@@ -19,10 +19,21 @@ const router = createBrowserRouter(
 
       <Route path="/user/:userid">
         <Route path="mentor" element={<MentorPage />}>
-          <Route path="interns" element={<InternList />} />
+        <Route path="interns">
+            <Route index element={<InternList status="new" />} />
+            <Route path="new" element={<InternList status="new" />} />
+            <Route path="undergoing" element={<InternList status="undergoing" />} />
+            <Route path="completed" element={<InternList status="completed" />} />
+          </Route>
         </Route>
         <Route path="hr" element={<HRPage />}>
-          <Route path="interns" element={<InternList />} />
+          <Route path="interns">
+            <Route index element={<InternList status="new" />} />
+            <Route path="new" element={<InternList status="new" />} />
+            <Route path="undergoing" element={<InternList status="undergoing" />} />
+            <Route path="certify" element={<InternList status="certify" />} />
+            <Route path="completed" element={<InternList status="completed" />} />
+          </Route>
         </Route>
       </Route>
     </>

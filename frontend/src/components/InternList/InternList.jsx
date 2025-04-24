@@ -1,4 +1,5 @@
 import React from "react";
+import "./InternList.css"
 
 function InternList() {
   return (

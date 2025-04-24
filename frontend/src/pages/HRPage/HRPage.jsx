@@ -6,17 +6,21 @@ import { NavLink, Outlet } from "react-router-dom";
 function HRPage() {
   // Fetch hr verification
   const [userId, setUserId] = useState({});
+  const internNavPath = `/user/${userId}/hr/interns`;
 
   useEffect(() => {
     const fetchHRData = async () => {
       try {
-        const response = await fetch("http://localhost:7000/api/v1/auth/current-user", {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://localhost:7000/api/v1/auth/current-user",
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const data = await response.json();
         setUserId(data.data.user._id);
@@ -39,28 +43,35 @@ function HRPage() {
             <h1>Human Resource</h1>
           </div>
           <NavLink
-            to={`/user/${userId}/hr/interns`}
-            className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
+            to={`${internNavPath}/new`}
+            end
+            className={({ isActive }) => {
+              console.log("isActive", isActive); // Check this in devtools console
+              return `op menu ${isActive ? "active" : ""}`;
+            }}
           >
             New Interns
           </NavLink>
           <NavLink
-            to={`/user/${userId}/hr/interns`}
+            to={`${internNavPath}/undergoing`}
+            end
             className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
           >
             Undergoing
           </NavLink>
           <NavLink
-            to={`/user/${userId}/hr/interns`}
-            className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
-          >
-            Completed
-          </NavLink>
-          <NavLink
-            to={`/user/${userId}/hr/interns`}
+            to={`${internNavPath}/certify`}
+            end
             className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
           >
             Issue Certificate
+          </NavLink>
+          <NavLink
+            to={`${internNavPath}/completed`}
+            end
+            className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
+          >
+            Completed
           </NavLink>
           <button className="flex-cen-all addNewIntern">Add New Intern</button>
         </section>

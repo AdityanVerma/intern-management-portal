@@ -38,7 +38,7 @@ main .menuSection .menu {
 }
 
 main .menuSection .menu:hover,
-main .menuSection .menu:active {
+main .menuSection .menu.active {
     background-color: var(--dark-text);
     color: var(--secondary-bg);
 }
@@ -66,4 +66,6 @@ main .menuSection .addNewIntern:hover {
 /* DISPLAY-SECTION */
 main .displaySection {
     background-color: var(--secondary-bg);
+    padding: 0.5em;
+    overflow-x: auto;
 }

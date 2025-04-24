@@ -41,8 +41,9 @@ main .menuSection .menu {
     cursor: pointer;
     text-decoration: none;
 }
+
 main .menuSection .menu:hover,
-main .menuSection .menu:active {
+main .menuSection .menu.active {
     background-color: var(--dark-text);
     color: var(--secondary-bg);
 }
@@ -71,37 +72,4 @@ main .displaySection {
     background-color: var(--secondary-bg);
     padding: 0.5em;
     overflow-x: auto;
-}
-
-main .displaySection table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 800px;
-}
-
-main .displaySection thead,
-main .displaySection tbody {
-    display: contents;
-}
-
-main .displaySection table tr {
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
-    padding: 0.5em 0;
-    border-bottom: 1px solid var(--border);
-}
-
-main .displaySection table th,
-main .displaySection table td {
-    text-align: center;
-    padding: 0.5em;
-}
-
-main .displaySection select {
-    padding: 0.4em;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    background-color: #fff;
-    font-size: 0.9em;
-    width: 90%;
 }

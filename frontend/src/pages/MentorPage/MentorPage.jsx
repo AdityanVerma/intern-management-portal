@@ -6,6 +6,7 @@ import { NavLink, Outlet } from "react-router-dom";
 function MentorPage() {
   // Fetch mentor verification
   const [userId, setUserId] = useState({});
+  const internNavPath = `/user/${userId}/mentor/interns`;
 
   useEffect(() => {
     const fetchMentorData = async () => {
@@ -39,19 +40,22 @@ function MentorPage() {
             <h1>Mentor Name</h1>
           </div>
           <NavLink
-            to={`/user/${userId}/hr/interns`}
+            to={`${internNavPath}/new`}
+            end
             className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
           >
             New Interns
           </NavLink>
           <NavLink
-            to={`/user/${userId}/hr/interns`}
+            to={`${internNavPath}/undergoing`}
+            end
             className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
           >
             Undergoing
           </NavLink>
           <NavLink
-            to={`/user/${userId}/hr/interns`}
+            to={`${internNavPath}/completed`}
+            end
             className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
           >
             Completed
