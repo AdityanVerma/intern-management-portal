@@ -35,7 +35,7 @@ const internSchema = new Schema(
             type: String,
             required: true,
         },
-        collage: {
+        college: {
             type: String,
             required: true,
         },

@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { NavLink, Outlet } from "react-router-dom";
 import "./HRPage.css";
 import Header from "../../components/Header/Header.jsx";
-import { NavLink, Outlet } from "react-router-dom";
+import AddNewInternModal from "../../components/AddNewInternModal/AddNewInternModal.jsx";
 
 function HRPage() {
   // Fetch hr verification
   const [userId, setUserId] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const internNavPath = `/user/${userId}/hr/interns`;
 
   useEffect(() => {
@@ -31,6 +33,21 @@ function HRPage() {
 
     fetchHRData();
   }, []);
+
+  // Modal open/close handlers
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  // Placeholder for actions
+  const handleRegisterClick = () => {
+    console.log("Register Intern clicked");
+    closeModal();
+  };
+
+  const handleUploadClick = () => {
+    console.log("Upload File clicked");
+    closeModal();
+  };
 
   return (
     <div className="screen-container">
@@ -73,13 +90,24 @@ function HRPage() {
           >
             Completed
           </NavLink>
-          <button className="flex-cen-all addNewIntern">Add New Intern</button>
+          <button className="flex-cen-all addNewIntern" onClick={openModal}>
+            Add New Intern
+          </button>
         </section>
 
         <section className="displaySection">
           <Outlet />
         </section>
       </main>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <AddNewInternModal
+          onClose={closeModal}
+          onRegisterClick={handleRegisterClick}
+          onUploadClick={handleUploadClick}
+        />
+      )}
     </div>
   );
 }
