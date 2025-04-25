@@ -1,16 +1,27 @@
 import React from "react";
-import "./AddNewInternModal.css";  // We'll style it in the next step.
+import "./AddNewInternModal.css"; // We'll style it in the next step.
 
-const AddNewInternModal = ({ onClose, onRegisterClick, onUploadClick }) => {
+const AddNewInternModal = ({
+  onClose,
+  onRegisterClick,
+  onUploadClick,
+  children,
+}) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
         <h2>Add New Intern</h2>
         <div className="modal-buttons">
           <button onClick={onRegisterClick}>Register Intern</button>
-          <button onClick={onUploadClick}>Upload File (CSV)</button>
+          <div className="file-upload-section">
+            <div>{children}</div>
+            <button onClick={onUploadClick}>Upload File</button>
+          </div>
         </div>
-        <button className="modal-close" onClick={onClose}>Close</button>
+
+        <button className="modal-close" onClick={onClose}>
+          Close
+        </button>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { ApiError } from "./utils/ApiError.js";
 
 const app = express();
 
@@ -24,14 +25,32 @@ app.use(cookieParser());
     Essential for handling sessions or authentication tokens.
 */
 
-
 // ---> Routes
 // routes import
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
+import internRouter from "./routes/intern.routes.js";
 
 // routes declaration
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/interns", internRouter);
+
+// --->  Error handling middleware (must be used after routes)
+app.use((err, req, res, next) => {
+    if (err instanceof ApiError) {
+        // If it's an instance of ApiError, return the structured JSON error
+        return res.status(err.statusCode).json(err.toJSON());
+    }
+
+    // Handle other types of errors
+    return res.status(500).json({
+        statusCode: 500,
+        message: "Internal Server Error",
+        success: false,
+        errors: [err.message || "Unknown error"],
+        stack: err.stack || null,
+    });
+});
 
 export { app };
