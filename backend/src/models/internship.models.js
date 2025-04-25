@@ -12,9 +12,9 @@ const internshipSchema = new Schema(
             ref: "User",
             required: true,
         },
-        domainId: {
+        departmentId: {
             type: Schema.Types.ObjectId,
-            ref: "Domain",
+            ref: "Department",
             required: true,
         },
         remarks: {
