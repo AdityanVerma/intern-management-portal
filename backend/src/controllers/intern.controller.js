@@ -218,12 +218,14 @@ const importInterns = asyncHandler(async (req, res, next) => {
 });
 
 // Get Interns
-const getInternData = asyncHandler(async (req, res) => {
+const getInternData = asyncHandler(async (_, res) => {
     const interns = await Intern.find();
 
     return res
         .status(200)
         .json(new ApiResponse(200, { intern: interns }, "Intern"));
 });
+
+// Assign Mentor 
 
 export { getInternData, importInterns, registerIntern };
