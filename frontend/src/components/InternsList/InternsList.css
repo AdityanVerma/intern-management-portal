@@ -12,7 +12,7 @@ tbody {
 
 table tr {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(9, 1fr);
     align-items: center;
     padding: 0.5em 0;
     gap: 5px;
@@ -41,10 +41,11 @@ table tbody tr {
 }
 
 table tbody tr td:first-child {
-    margin-left: 1rem;
+    margin-left: 2rem;
     text-align: left;
 }
 
+/* <-------------- New Intern List --------------> */
 select {
     padding: 0.4em;
     border-radius: 4px;
@@ -53,3 +54,23 @@ select {
     font-size: 0.9em;
     width: 90%;
 }
+
+.action-btn button {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0 5px;
+    padding: 3px;
+    transition: all 100ms linear;
+}
+.action-btn .accept-btn {
+    color: green;
+}
+.action-btn .reject-btn {
+    color: rgb(230, 39, 39);
+}
+.action-btn .accept-btn:hover,
+.action-btn .reject-btn:hover {
+    font-size: 1rem;
+}
+

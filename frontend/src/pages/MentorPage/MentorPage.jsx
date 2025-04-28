@@ -1,26 +1,33 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 import "./MentorPage.css";
 import Header from "../../components/Header/Header.jsx";
 import { NavLink, Outlet } from "react-router-dom";
 
 function MentorPage() {
-  // Fetch mentor verification
   const [userId, setUserId] = useState({});
   const internNavPath = `/user/${userId}/mentor/interns`;
 
+  // Fetching Current User from API
   useEffect(() => {
     const fetchMentorData = async () => {
       try {
-        const response = await fetch("http://localhost:7000/api/v1/auth/current-user", {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://localhost:7000/api/v1/auth/current-user",
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const data = await response.json();
-        setUserId(data.data.user._id);
+        if (data?.data?.user?._id) {
+          setUserId(data.data.user._id);
+        } else {
+          console.error("User ID not found in response:", data);
+        }
       } catch (error) {
         console.error("❌ Error:", error.message);
       }
@@ -63,7 +70,7 @@ function MentorPage() {
         </section>
 
         <section className="displaySection">
-          <Outlet />
+          <Outlet context={{ loginAs: "mentor" }} />
         </section>
       </main>
     </div>

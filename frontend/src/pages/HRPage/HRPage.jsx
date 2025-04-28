@@ -6,8 +6,8 @@ import AddNewInternModal from "../../components/AddNewInternModal/AddNewInternMo
 
 function HRPage() {
   const [userId, setUserId] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const internNavPath = `/user/${userId}/hr/interns`;
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
   // Fetching Current User from API
@@ -152,7 +152,7 @@ function HRPage() {
         </section>
 
         <section className="displaySection">
-          <Outlet />
+          <Outlet context={{ loginAs: "hr" }} />
         </section>
       </main>
 

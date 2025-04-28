@@ -1,13 +1,11 @@
 /* eslint-disable no-undef */
 import { useEffect, useState } from "react";
 import "./InternsList.css";
-import { useOutletContext } from "react-router-dom";
 
-function NewInterns() {
+function UndergoingInternsList() {
   const [interns, setInterns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { loginAs } = useOutletContext();
 
   // Fetch interns with internStatus = "new"
   const fetchInterns = async () => {
@@ -23,12 +21,9 @@ function NewInterns() {
       );
 
       const data = await response.json();
-      data.data.intern.map((statusIntern) => {
-        if (statusIntern.internStatus === "new") {
-          console.log(statusIntern);
-        }
-      });
+
       if (response.ok) {
+        // Filter interns with status "new"
         const newInterns = data?.data?.intern?.filter(
           (intern) => intern.internStatus === "new"
         );
@@ -71,11 +66,7 @@ function NewInterns() {
               <th>Course</th>
               <th>Internship Duration</th>
               <th>Joined On</th>
-              {loginAs === "hr" ? (
-                <th>Assign Mentor</th>
-              ) : (
-                <th>Action</th>
-              )}
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -97,39 +88,10 @@ function NewInterns() {
                   })}
                 </td>
 
-                <td>
-                  {loginAs === "hr" ? (
-                    <select
-                      value={intern.mentor || ""}
-                      onChange={(e) =>
-                        onMentorAssign(e.target.value, intern._id)
-                      }
-                    >
-                      <option value="">Assign Mentor</option>
-                      {/* {getMentorsForDomain(intern.domain || "").map((mentor) => (
-                        <option key={mentor.id} value={mentor.name}>
-                          {mentor.name}
-                        </option>
-                      ))} */}
-                    </select>
-                  ) : (
-                    <div className="flex-cen-all action-btn">
-                      <button
-                        type="button"
-                        className="accept-btn"
-                        onClick={() => onAccept(intern._id)}
-                      >
-                        Accept
-                      </button>/
-                      <button
-                        type="button"
-                        className="reject-btn"
-                        onClick={() => onReject(intern._id)}
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  )}
+                <td className="flex-cen-all">
+                  <button type="submit">Accept</button>
+                  /
+                  <button type="submit">Reject</button>
                 </td>
               </tr>
             ))}
@@ -140,4 +102,4 @@ function NewInterns() {
   );
 }
 
-export default NewInterns;
+export default UndergoingInternsList;
