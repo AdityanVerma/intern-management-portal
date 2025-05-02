@@ -40,10 +40,10 @@ const userSchema = new Schema(
             required: true,
         },
         departmentId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: "Department",
             required: function () {
-                return this.role === "mentor"; // only required for mentors
+                return this.role === "mentor";
             },
         },
         refreshToken: {

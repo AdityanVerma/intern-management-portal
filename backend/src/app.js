@@ -30,11 +30,13 @@ app.use(cookieParser());
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
 import internRouter from "./routes/intern.routes.js";
+import departmentRouter from "./routes/department.routes.js";
 
 // routes declaration
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/interns", internRouter);
+app.use("/api/v1/departments", departmentRouter);
 
 // --->  Error handling middleware (must be used after routes)
 app.use((err, req, res, next) => {

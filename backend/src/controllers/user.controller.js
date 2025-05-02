@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
+import { Department } from "../models/department.model.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
     try {
@@ -26,7 +27,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
     // ---> Getting user details
-    const { username, password, email, fullName, role, department } = req.body;
+    const { username, password, email, fullName, role, departmentId } = req.body;
 
     // ---> Validation
     if (
@@ -43,6 +44,12 @@ const registerUser = asyncHandler(async (req, res) => {
     });
     if (existedUser) {
         throw new ApiError(409, "user with email or username already exists");
+    }
+
+    // ---> Fetch departmentId from Department model if the role is "mentor"
+    const departmentCheck = await Department.findOne({ _id: departmentId });
+    if (!departmentCheck) {
+        throw new ApiError(409, "Department does not exist!!");
     }
 
     // ---> check for avatar
@@ -66,7 +73,7 @@ const registerUser = asyncHandler(async (req, res) => {
         fullName,
         avatar: avatar?.url || "",
         role,
-        department: department || "",
+        departmentId: role === "mentor" ? departmentCheck._id : undefined,
     });
 
     // Find user by ID (this will also let us able to check if the user even created or not then we will remove the fields) then

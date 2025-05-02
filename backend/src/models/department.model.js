@@ -1,14 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
-const departmentSchema = new Schema(
-    {
-        name: {
-            type: String,
-        },
+const departmentSchema = new Schema({
+    _id: {
+        type: String, // Custom ID will be String like "DEPCSE"
     },
-    {
-        timestamp: true
-    }
-);
+    departmentName: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+});
 
 export const Department = mongoose.model("Department", departmentSchema);
