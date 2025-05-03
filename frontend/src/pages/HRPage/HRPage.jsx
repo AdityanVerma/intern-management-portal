@@ -152,7 +152,7 @@ function HRPage() {
         </section>
 
         <section className="displaySection">
-          <Outlet context={{ loginAs: "hr" }} />
+          <Outlet />
         </section>
       </main>
 

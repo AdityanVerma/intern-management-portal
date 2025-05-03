@@ -200,18 +200,16 @@ const importInterns = asyncHandler(async (req, res, next) => {
         await Intern.insertMany(internsToInsert);
 
         // ---> Send API response with success message and result summary
-        return res
-            .status(201)
-            .json(
-                new ApiResponse(
-                    201,
-                    {
-                        inserted: internsToInsert.length,
-                        skipped: skippedRows.length,
-                    },
-                    "Interns imported successfully"
-                )
-            );
+        return res.status(201).json(
+            new ApiResponse(
+                201,
+                {
+                    inserted: internsToInsert.length,
+                    skipped: skippedRows.length,
+                },
+                "Interns imported successfully"
+            )
+        );
     } catch (error) {
         next(error);
     }
@@ -223,9 +221,154 @@ const getInternData = asyncHandler(async (_, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200, { intern: interns }, "Intern"));
+        .json(
+            new ApiResponse(
+                200,
+                { intern: interns },
+                "Interns Fetched Successfully!!"
+            )
+        );
 });
 
-// Assign Mentor 
+// Request Mentor
+const requestedMentorIds = asyncHandler(async (req, res) => {
+    // ---> Getting Details
+    const { internId, mentorId } = req.body;
 
-export { getInternData, importInterns, registerIntern };
+    // ---> Validation
+    if ([internId, mentorId].some((field) => field?.trim() === "")) {
+        throw new ApiError(400, "Intern ID and Mentor ID are required!!");
+    }
+
+    // ---> Find intern
+    const intern = await Intern.findOne({ _id: internId });
+    if (!intern) {
+        throw new ApiError(409, "Intern not found!!");
+    }
+
+    // ---> Check if the mentor is already requested
+    if (
+        intern.requestedMentorIds &&
+        intern.requestedMentorIds.includes(mentorId)
+    ) {
+        throw new ApiError(400, "Mentor request already sent!!");
+    }
+
+    // ---> Initialize requestedMentorIds array if undefined
+    if (!intern.requestedMentorIds) {
+        intern.requestedMentorIds = [];
+    }
+
+    // ---> Add the mentor request
+    intern.requestedMentorIds.push(mentorId); // Push mentorId to the array
+    intern.internStatus = "pending"; // Set intern status to pending
+    await intern.save();
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { intern },
+                "Mentor request sent successfully!!"
+            )
+        );
+});
+
+// Assign Mentor (onAccept)
+const onMentorAccept = asyncHandler(async (req, res) => {
+    // ---> Getting Details
+    const { internId, mentorId } = req.body;
+
+    // ---> Validation
+    if ([internId, mentorId].some((field) => field?.trim() === "")) {
+        throw new ApiError(400, "Intern ID and Mentor ID are required!!");
+    }
+
+    // ---> Find intern
+    const intern = await Intern.findOne({ _id: internId });
+    if (!intern) {
+        throw new ApiError(409, "Intern not found!!");
+    }
+
+    // ---> Check if mentor was requested
+    if (
+        !intern.requestedMentorIds ||
+        !intern.requestedMentorIds.includes(mentorId)
+    ) {
+        throw new ApiError(400, "Mentor was not requested by this intern.");
+    }
+
+    // ---> Check if already assigned
+    if (intern.mentorId) {
+        throw new ApiError(400, "Mentor already assigned to this intern!!");
+    }
+
+    // ---> Assign the mentor
+    intern.mentorId = mentorId;
+    intern.internStatus = "undergoing";
+    intern.requestedMentorIds = undefined; // Clear all pending requests
+
+    await intern.save();
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, { intern }, "Mentor assigned successfully"));
+});
+
+// Reject By Mentor (onReject)
+const onMentorReject = asyncHandler(async (req, res) => {
+    // ---> Getting Details
+    const { internId, mentorId } = req.body;
+
+    // ---> Validation
+    if ([internId, mentorId].some((field) => field?.trim() === "")) {
+        throw new ApiError(400, "Intern ID and Mentor ID are required!!");
+    }
+
+    // ---> Find intern
+    const intern = await Intern.findOne({ _id: internId });
+    if (!intern) {
+        throw new ApiError(409, "Intern not found!!");
+    }
+
+    // ---> Check if the mentor was requested
+    if (
+        !intern.requestedMentorIds ||
+        !intern.requestedMentorIds.includes(mentorId)
+    ) {
+        throw new ApiError(400, "Mentor was not requested by this intern.");
+    }
+
+    // ---> Remove the mentorId from requestedMentorIds array
+    intern.requestedMentorIds = intern.requestedMentorIds.filter(
+        (id) => id.toString() !== mentorId.toString()
+    );
+
+    // ---> Check if the requestedMentorIds array is empty, then set internStatus to 'new'
+    if (intern.requestedMentorIds.length === 0) {
+        intern.internStatus = "new"; // Set status to 'new' if no mentor requests remain
+    }
+
+    // ---> Save the updated intern record
+    await intern.save();
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { intern },
+                "Mentor request rejected successfully!!"
+            )
+        );
+});
+
+export {
+    getInternData,
+    importInterns,
+    onMentorAccept,
+    onMentorReject,
+    registerIntern,
+    requestedMentorIds,
+};

@@ -4,8 +4,8 @@ import Header from "../../components/Header/Header.jsx";
 import { NavLink, Outlet } from "react-router-dom";
 
 function MentorPage() {
-  const [userId, setUserId] = useState({});
-  const internNavPath = `/user/${userId}/mentor/interns`;
+  const [user, setUser] = useState({});
+  const internNavPath = `/user/${user._Id}/mentor/interns`;
 
   // Fetching Current User from API
   useEffect(() => {
@@ -23,8 +23,8 @@ function MentorPage() {
         );
 
         const data = await response.json();
-        if (data?.data?.user?._id) {
-          setUserId(data.data.user._id);
+        if (data?.data?.user) {
+          setUser(data.data.user);
         } else {
           console.error("User ID not found in response:", data);
         }
@@ -44,7 +44,7 @@ function MentorPage() {
         <section className="menuSection">
           <div className="op loginAs flex-center">
             <p>Login As:</p>
-            <h1>Mentor Name</h1>
+            <h1>{user.fullName}</h1>
           </div>
           <NavLink
             to={`${internNavPath}/new`}
@@ -70,7 +70,7 @@ function MentorPage() {
         </section>
 
         <section className="displaySection">
-          <Outlet context={{ loginAs: "mentor" }} />
+          <Outlet />
         </section>
       </main>
     </div>

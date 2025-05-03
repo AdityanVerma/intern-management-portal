@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-var STATUS = ['new', 'undergoing', 'certify', 'completed'];
+var STATUS = ["new", "pending", "undergoing", "certify", "completed"];
 
 const internSchema = new Schema(
     {
@@ -47,6 +47,12 @@ const internSchema = new Schema(
             type: String,
             required: true,
         },
+        requestedMentorIds: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
         mentorId: {
             type: Schema.Types.ObjectId,
             ref: "User",
@@ -54,7 +60,7 @@ const internSchema = new Schema(
         internStatus: {
             type: String,
             enum: STATUS,
-        }
+        },
     },
     {
         timestamps: true,

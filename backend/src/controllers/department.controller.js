@@ -47,4 +47,19 @@ const registerDepartment = asyncHandler(async (req, res) => {
         );
 });
 
-export { registerDepartment };
+// Get Departments
+const getDepartments = asyncHandler(async (req, res) => {
+    const department = await Department.find();
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { department: department },
+                "Departments Fetched Successfully!!"
+            )
+        );
+});
+
+export { getDepartments, registerDepartment };

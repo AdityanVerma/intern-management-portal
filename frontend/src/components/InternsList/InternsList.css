@@ -12,7 +12,6 @@ tbody {
 
 table tr {
     display: grid;
-    grid-template-columns: repeat(9, 1fr);
     align-items: center;
     padding: 0.5em 0;
     gap: 5px;
@@ -46,6 +45,10 @@ table tbody tr td:first-child {
 }
 
 /* <-------------- New Intern List --------------> */
+.newInternTable tr {
+    grid-template-columns: repeat(10, 1fr);
+}
+
 select {
     padding: 0.4em;
     border-radius: 4px;

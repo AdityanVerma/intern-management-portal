@@ -27,7 +27,8 @@ const generateAccessAndRefreshTokens = async (userId) => {
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
     // ---> Getting user details
-    const { username, password, email, fullName, role, departmentId } = req.body;
+    const { username, password, email, fullName, role, departmentId } =
+        req.body;
 
     // ---> Validation
     if (
@@ -283,9 +284,31 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         );
 });
 
+// Get All Mentors
+const getMentorData = asyncHandler(async (req, res) => {
+    try {
+        const mentors = await User.find({ role: "mentor" }).select(
+            "-password -refreshToken"
+        );
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    { user: mentors },
+                    "Mentors Fetched Successfully!!"
+                )
+            );
+    } catch (error) {
+        throw new ApiError(500, "Failed to Fetch Mentor Data!!");
+    }
+});
+
 export {
     changeCurrentPassword,
     getCurrentUser,
+    getMentorData,
     loginUser,
     logoutUser,
     refreshAccessToken,

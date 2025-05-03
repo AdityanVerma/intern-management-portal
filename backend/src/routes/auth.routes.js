@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
     changeCurrentPassword,
     getCurrentUser,
+    getMentorData,
     loginUser,
     logoutUser,
     refreshAccessToken,
@@ -30,5 +31,6 @@ router.route("/refresh-token").post(refreshAccessToken);
 router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/current-user").get(verifyJWT, getCurrentUser);
 router.route("/change-password").post(verifyJWT, changeCurrentPassword);
+router.route("/mentor-data").get(getMentorData);
 
 export default router;

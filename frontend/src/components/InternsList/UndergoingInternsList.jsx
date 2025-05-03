@@ -1,13 +1,39 @@
-/* eslint-disable no-undef */
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
 import "./InternsList.css";
 
-function UndergoingInternsList() {
+function NewInterns() {
+  const [user, setUser] = useState(null);
   const [interns, setInterns] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // Fetch interns with internStatus = "new"
+  // Fetching current User
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:7000/api/v1/auth/current-user",
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+      if (data?.data?.user) {
+        setUser(data.data.user);
+      } else {
+        console.error("User ID not found in response:", data);
+      }
+    } catch (error) {
+      console.error("❌ Error:", error.message);
+    }
+  };
+
+  // Fetching interns with internStatus
   const fetchInterns = async () => {
     try {
       const response = await fetch(
@@ -23,39 +49,63 @@ function UndergoingInternsList() {
       const data = await response.json();
 
       if (response.ok) {
-        // Filter interns with status "new"
-        const newInterns = data?.data?.intern?.filter(
-          (intern) => intern.internStatus === "new"
-        );
-        setInterns(newInterns);
+        let filteredInterns = data?.data?.intern || [];
+
+        console.log(filteredInterns);
+        // Filtering based on role
+        if (user?.role === "hr") {
+          // HR should see "undergoing" interns
+          filteredInterns = filteredInterns.filter(
+            (intern) => intern.internStatus === "undergoing"
+          );
+        } else if (user?.role === "mentor") {
+          // Mentors should only see "undergoing" interns with matching requestedMentorId
+          filteredInterns = filteredInterns.filter(
+            (intern) =>
+              intern.internStatus === "undergoing" &&
+              intern.mentorId?.includes(user?._id)
+          );
+        }
+        console.log(filteredInterns);
+
+        setInterns(filteredInterns);
       } else {
-        setError("Failed to fetch interns");
+        toast.error("Failed to fetch interns");
       }
     } catch (error) {
-      setError(error.message);
+      toast.error(
+        error?.message || "Something went wrong while fetching interns!!",
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+        }
+      );
     } finally {
       setLoading(false);
     }
   };
 
+  // useEffects
   useEffect(() => {
-    fetchInterns();
+    fetchCurrentUser();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    if (user) {
+      fetchInterns();
+    }
+  }, [user]);
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  // Messages
+  if (!user) return <div>Loading user info...</div>;
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>
       {interns.length === 0 ? (
-        <p>No new interns to display.</p>
+        <p>No interns to display.</p>
       ) : (
-        <table>
+        <table className="newInternTable">
           <thead>
             <tr>
               <th>Name</th>
@@ -65,8 +115,9 @@ function UndergoingInternsList() {
               <th>College</th>
               <th>Course</th>
               <th>Internship Duration</th>
+              <th>Intern Status</th>
               <th>Joined On</th>
-              <th>Action</th>
+              {user?.role === "hr" ? <th>Assigned Mentor</th> : <th>Review</th>}
             </tr>
           </thead>
           <tbody>
@@ -79,6 +130,7 @@ function UndergoingInternsList() {
                 <td>{intern.college}</td>
                 <td>{intern.course}</td>
                 <td>{intern.duration}</td>
+                <td>{intern.internStatus.toUpperCase()}</td>
 
                 <td>
                   {new Date(intern.createdAt).toLocaleDateString("en-US", {
@@ -88,18 +140,21 @@ function UndergoingInternsList() {
                   })}
                 </td>
 
-                <td className="flex-cen-all">
-                  <button type="submit">Accept</button>
-                  /
-                  <button type="submit">Reject</button>
+                <td>
+                  {user?.role === "hr" ? (
+                    <div>{intern?.mentorId?.includes(user?._id)?.fullName}</div>
+                  ) : (
+                    <div>null</div>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
+      <ToastContainer />
     </div>
   );
 }
 
-export default UndergoingInternsList;
+export default NewInterns;
