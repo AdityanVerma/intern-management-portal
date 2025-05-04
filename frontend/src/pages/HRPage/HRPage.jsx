@@ -133,18 +133,18 @@ function HRPage() {
             Undergoing
           </NavLink>
           <NavLink
-            to={`${internNavPath}/certify`}
-            end
-            className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
-          >
-            Issue Certificate
-          </NavLink>
-          <NavLink
             to={`${internNavPath}/completed`}
             end
             className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
           >
             Completed
+          </NavLink>
+          <NavLink
+            to={`${internNavPath}/certify`}
+            end
+            className={({ isActive }) => `op menu ${isActive ? "active" : ""}`}
+          >
+            Certificate Issued
           </NavLink>
           <button className="flex-cen-all addNewIntern" onClick={openModal}>
             Add New Intern

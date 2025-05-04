@@ -1,12 +1,15 @@
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./InternsList.css";
 
 function NewInterns() {
   const [user, setUser] = useState(null);
+  const [mentors, setMentors] = useState([]);
   const [interns, setInterns] = useState([]);
+  const [mentorDataLoading, setMentorDataLoading] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetching current User
   const fetchCurrentUser = async () => {
@@ -33,8 +36,29 @@ function NewInterns() {
     }
   };
 
+  // Fetching Mentors
+  const fetchMentors = useCallback(async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:7000/api/v1/auth/mentor-data"
+      );
+
+      const mentor = await response.json();
+
+      if (response.ok) {
+        setMentors(mentor?.data?.user || []);
+      } else {
+        setError("Failed to fetch mentors");
+      }
+    } catch (err) {
+      setError(err?.message || "Error fetching mentors data");
+    } finally {
+      setMentorDataLoading(false);
+    }
+  }, []);
+
   // Fetching interns with internStatus
-  const fetchInterns = async () => {
+  const fetchInterns = useCallback(async () => {
     try {
       const response = await fetch(
         "http://localhost:7000/api/v1/interns/interns-data",
@@ -51,7 +75,6 @@ function NewInterns() {
       if (response.ok) {
         let filteredInterns = data?.data?.intern || [];
 
-        console.log(filteredInterns);
         // Filtering based on role
         if (user?.role === "hr") {
           // HR should see "undergoing" interns
@@ -66,7 +89,6 @@ function NewInterns() {
               intern.mentorId?.includes(user?._id)
           );
         }
-        console.log(filteredInterns);
 
         setInterns(filteredInterns);
       } else {
@@ -83,7 +105,7 @@ function NewInterns() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   // useEffects
   useEffect(() => {
@@ -93,12 +115,14 @@ function NewInterns() {
   useEffect(() => {
     if (user) {
       fetchInterns();
+      fetchMentors();
     }
-  }, [user]);
+  }, [user, fetchInterns, fetchMentors]);
 
   // Messages
   if (!user) return <div>Loading user info...</div>;
-  if (loading) return <div>Loading...</div>;
+  if (loading || mentorDataLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
@@ -142,7 +166,10 @@ function NewInterns() {
 
                 <td>
                   {user?.role === "hr" ? (
-                    <div>{intern?.mentorId?.includes(user?._id)?.fullName}</div>
+                    <div>
+                      {mentors.find((m) => m._id === intern.mentorId)
+                        ?.fullName || "No mentor assigned"}
+                    </div>
                   ) : (
                     <div>null</div>
                   )}
