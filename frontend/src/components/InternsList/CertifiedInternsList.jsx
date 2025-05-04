@@ -5,11 +5,8 @@ import "./InternsList.css";
 
 function NewInterns() {
   const [user, setUser] = useState(null);
-  const [mentors, setMentors] = useState([]);
   const [interns, setInterns] = useState([]);
-  const [mentorDataLoading, setMentorDataLoading] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   // Fetching current User
   const fetchCurrentUser = async () => {
@@ -36,27 +33,6 @@ function NewInterns() {
     }
   };
 
-  // Fetching Mentors
-  const fetchMentors = useCallback(async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:7000/api/v1/auth/mentor-data"
-      );
-
-      const mentor = await response.json();
-
-      if (response.ok) {
-        setMentors(mentor?.data?.user || []);
-      } else {
-        setError("Failed to fetch mentors");
-      }
-    } catch (err) {
-      setError(err?.message || "Error fetching mentors data");
-    } finally {
-      setMentorDataLoading(false);
-    }
-  }, []);
-
   // Fetching interns with internStatus
   const fetchInterns = useCallback(async () => {
     try {
@@ -74,22 +50,10 @@ function NewInterns() {
 
       if (response.ok) {
         let filteredInterns = data?.data?.intern || [];
-
-        // Filtering based on role
-        if (user?.role === "hr") {
-          // HR should see "undergoing" interns
-          filteredInterns = filteredInterns.filter(
-            (intern) => intern.internStatus === "undergoing"
-          );
-        } else if (user?.role === "mentor") {
-          // Mentors should only see "undergoing" interns with matching requestedMentorId
-          filteredInterns = filteredInterns.filter(
-            (intern) =>
-              intern.internStatus === "undergoing" &&
-              intern.mentorId?.includes(user?._id)
-          );
-        }
-
+        // HR should see "certify" interns
+        filteredInterns = filteredInterns.filter(
+          (intern) => intern.internStatus === "certify"
+        );
         setInterns(filteredInterns);
       } else {
         toast.error("Failed to fetch interns");
@@ -105,7 +69,7 @@ function NewInterns() {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, []);
 
   // useEffects
   useEffect(() => {
@@ -115,21 +79,19 @@ function NewInterns() {
   useEffect(() => {
     if (user) {
       fetchInterns();
-      fetchMentors();
     }
-  }, [user, fetchInterns, fetchMentors]);
+  }, [user, fetchInterns]);
 
   // Messages
   if (!user) return <div>Loading user info...</div>;
-  if (loading || mentorDataLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>
       {interns.length === 0 ? (
         <p>No interns to display.</p>
       ) : (
-        <table className="undergoingInternTable">
+        <table className="completedInternTable">
           <thead>
             <tr>
               <th>Name</th>
@@ -141,7 +103,7 @@ function NewInterns() {
               <th>Internship Duration</th>
               <th>Intern Status</th>
               <th>Joined On</th>
-              {user?.role === "hr" ? <th>Assigned Mentor</th> : <th>Review</th>}
+              <th>Internship Completion Date</th>
             </tr>
           </thead>
           <tbody>
@@ -165,14 +127,13 @@ function NewInterns() {
                 </td>
 
                 <td>
-                  {user?.role === "hr" ? (
-                    <div>
-                      {mentors.find((m) => m._id === intern.mentorId)
-                        ?.fullName || "No mentor assigned"}
-                    </div>
-                  ) : (
-                    <div>null</div>
-                  )}
+                  {intern.endDate
+                    ? new Date(intern.endDate).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : "N/A"}
                 </td>
               </tr>
             ))}

@@ -10,6 +10,8 @@ import HRPage from "./pages/HRPage/HRPage.jsx";
 import MentorPage from "./pages/MentorPage/MentorPage.jsx";
 import NewInternsList from "./components/InternsList/NewInternsList.jsx";
 import UndergoingInternsList from "./components/InternsList/UndergoingInternsList.jsx";
+import CompletedInternsList from "./components/InternsList/CompletedInternsList.jsx";
+import CertifiedInternsList from "./components/InternsList/CertifiedInternsList.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,7 +26,7 @@ const router = createBrowserRouter(
             <Route index element={<NewInternsList />} />
             <Route path="new" element={<NewInternsList />} />
             <Route path="undergoing" element={<UndergoingInternsList />} />
-            <Route path="completed" element={<NewInternsList />} />
+            <Route path="completed" element={<CompletedInternsList />} />
           </Route>
         </Route>
         <Route path="hr" element={<HRPage />}>
@@ -32,8 +34,8 @@ const router = createBrowserRouter(
             <Route index element={<NewInternsList />} />
             <Route path="new" element={<NewInternsList />} />
             <Route path="undergoing" element={<UndergoingInternsList />} />
-            <Route path="certify" element={<NewInternsList />} />
-            <Route path="completed" element={<NewInternsList />} />
+            <Route path="completed" element={<CompletedInternsList />} />
+            <Route path="certify" element={<CertifiedInternsList />} />
           </Route>
         </Route>
       </Route>
