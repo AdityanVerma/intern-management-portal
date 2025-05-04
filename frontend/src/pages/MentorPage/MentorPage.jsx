@@ -5,7 +5,7 @@ import { NavLink, Outlet } from "react-router-dom";
 
 function MentorPage() {
   const [user, setUser] = useState({});
-  const internNavPath = `/user/${user._Id}/mentor/interns`;
+  const internNavPath = `/user/${user._id}/mentor/interns`;
 
   // Fetching Current User from API
   useEffect(() => {

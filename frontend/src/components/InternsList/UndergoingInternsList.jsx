@@ -141,7 +141,7 @@ function NewInterns() {
               <th>Internship Duration</th>
               <th>Intern Status</th>
               <th>Joined On</th>
-              {user?.role === "hr" ? <th>Assigned Mentor</th> : <th>Review</th>}
+              {user?.role === "hr" ? <th>Assigned Mentor</th> : <th>Status</th>}
             </tr>
           </thead>
           <tbody>
@@ -171,7 +171,9 @@ function NewInterns() {
                         ?.fullName || "No mentor assigned"}
                     </div>
                   ) : (
-                    <div>null</div>
+                    <div>
+                      <button className="updateStatusBtn">UPDATE</button>
+                    </div>
                   )}
                 </td>
               </tr>
