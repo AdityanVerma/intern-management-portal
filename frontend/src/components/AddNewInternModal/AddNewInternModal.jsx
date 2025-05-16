@@ -1,4 +1,3 @@
-import React from "react";
 import "./AddNewInternModal.css"; // We'll style it in the next step.
 
 const AddNewInternModal = ({

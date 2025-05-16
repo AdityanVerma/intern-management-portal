@@ -119,7 +119,6 @@ function HRPage() {
             to={`${internNavPath}/new`}
             end
             className={({ isActive }) => {
-              // console.log("isActive", isActive); // Check this in devtools console
               return `op menu ${isActive ? "active" : ""}`;
             }}
           >

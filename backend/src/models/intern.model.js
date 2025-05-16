@@ -53,6 +53,23 @@ const internSchema = new Schema(
                 ref: "User",
             },
         ],
+        mentorRemarks: [
+            {
+                _id: false,
+                mentorId: {
+                    type: Schema.Types.ObjectId,
+                    ref: "User",
+                    required: true,
+                },
+                remark: { type: String },
+            },
+        ],
+        // suggestedMentorIds: [
+        //     {
+        //         type: Schema.Types.ObjectId,
+        //         ref: "User",
+        //     },
+        // ],
         mentorId: {
             type: Schema.Types.ObjectId,
             ref: "User",

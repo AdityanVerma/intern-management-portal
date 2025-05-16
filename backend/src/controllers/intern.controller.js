@@ -5,6 +5,8 @@ import xlsx from "xlsx";
 import fs from "fs";
 import path from "path";
 import { Intern } from "../models/intern.model.js";
+import { Internship } from "../models/internship.models.js";
+import { User } from "../models/user.model.js";
 
 // Register Intern
 const registerIntern = asyncHandler(async (req, res) => {
@@ -286,7 +288,7 @@ const onMentorAccept = asyncHandler(async (req, res) => {
     }
 
     // ---> Find intern
-    const intern = await Intern.findOne({ _id: internId });
+    const intern = await Intern.findById(internId);
     if (!intern) {
         throw new ApiError(409, "Intern not found!!");
     }
@@ -304,22 +306,51 @@ const onMentorAccept = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Mentor already assigned to this intern!!");
     }
 
+    // ---> Fetch Mentor to get departmentId
+    const mentor = await User.findById(mentorId);
+    if (!mentor || !mentor.departmentId) {
+        throw new ApiError(404, "Mentor not found or missing department info.");
+    }
+
     // ---> Assign the mentor
     intern.mentorId = mentorId;
     intern.internStatus = "undergoing";
     intern.requestedMentorIds = undefined; // Clear all pending requests
-
+    intern.suggestedMentorIds = undefined; // Clear all suggested requests
     await intern.save();
+
+    // ---> Create Internship record (optional: check if already exists)
+    const existingInternship = await Internship.findOne({
+        internId: intern._id,
+    });
+    if (existingInternship) {
+        throw new ApiError(400, "Internship already exists for this intern.");
+    }
+
+    const internship = await Internship.create({
+        internId: intern._id,
+        mentorId: mentor._id,
+        departmentId: mentor.departmentId,
+        remarks: "",
+        attendance: "",
+        projectSubmission: "",
+    });
 
     return res
         .status(200)
-        .json(new ApiResponse(200, { intern }, "Mentor assigned successfully"));
+        .json(
+            new ApiResponse(
+                200,
+                { intern, internship },
+                "Mentor assigned successfully"
+            )
+        );
 });
 
 // Reject By Mentor (onReject)
 const onMentorReject = asyncHandler(async (req, res) => {
     // ---> Getting Details
-    const { internId, mentorId } = req.body;
+    const { internId, mentorId, remarks, suggestedMentorId } = req.body;
 
     // ---> Validation
     if ([internId, mentorId].some((field) => field?.trim() === "")) {
@@ -344,6 +375,25 @@ const onMentorReject = asyncHandler(async (req, res) => {
     intern.requestedMentorIds = intern.requestedMentorIds.filter(
         (id) => id.toString() !== mentorId.toString()
     );
+
+    // ---> Save remarks:
+    if (remarks && remarks.trim() !== "") {
+        // If you want to store multiple remarks over time:
+        if (!Array.isArray(intern.mentorRemarks)) {
+            intern.mentorRemarks = [];
+        }
+        intern.mentorRemarks.push({
+            mentorId,
+            remark: remarks,
+        });
+    }
+
+    // Add suggestedMentorId to requestedMentorIds if provided and valid
+    if (suggestedMentorId && suggestedMentorId.trim() !== "") {
+        if (!intern.requestedMentorIds.includes(suggestedMentorId)) {
+            intern.requestedMentorIds.push(suggestedMentorId);
+        }
+    }
 
     // ---> Check if the requestedMentorIds array is empty, then set internStatus to 'new'
     if (intern.requestedMentorIds.length === 0) {

@@ -1,194 +1,210 @@
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./InternsList.css";
 
 function NewInterns() {
+  // DB VARIABES
   const [user, setUser] = useState(null);
   const [interns, setInterns] = useState([]);
   const [mentors, setMentors] = useState([]);
   const [departments, setDepartments] = useState([]);
+  // MODAL VARIABLES
+  const [hrShowModal, setHrShowModal] = useState(false);
+  const [selectedIntern, setSelectedIntern] = useState(null);
+  const [selectedMentorId, setSelectedMentorId] = useState("");
+  const [mentorModalOpen, setMentorModalOpen] = useState(false);
+  // REJECT MODAL VARIABLES
+  const [rejectModalOpen, setRejectModalOpen] = useState(false);
+  const [rejectionRemarks, setRejectionRemarks] = useState("");
+  const [suggestedMentorId, setSuggestedMentorId] = useState("");
+  const [selectedInternId, setSelectedInternId] = useState(null); // To know which intern is being rejected
+  // LOADING VARIABLES
   const [mentorDataLoading, setMentorDataLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetching current User
+  // Fetch current user
   const fetchCurrentUser = async () => {
     try {
-      const response = await fetch(
+      const res = await fetch(
         "http://localhost:7000/api/v1/auth/current-user",
         {
           method: "GET",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
 
-      const data = await response.json();
-      if (data?.data?.user) {
-        setUser(data.data.user);
-      } else {
-        console.error("User ID not found in response:", data);
-      }
-    } catch (error) {
-      console.error("❌ Error:", error.message);
+      const data = await res.json();
+      if (data?.data?.user) setUser(data.data.user);
+    } catch (err) {
+      console.error("Error fetching user:", err.message);
     }
   };
 
-  // Fetching interns with internStatus
+  // Fetch interns
   const fetchInterns = async () => {
     try {
-      const response = await fetch(
+      const res = await fetch(
         "http://localhost:7000/api/v1/interns/interns-data",
         {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
 
-      const data = await response.json();
-
-      if (response.ok) {
-        let filteredInterns = data?.data?.intern || [];
-
-        // Filtering based on role
-        if (user?.role === "hr") {
-          // HR should see "new" and "pending" interns
-          filteredInterns = filteredInterns.filter(
-            (intern) =>
-              intern.internStatus === "new" || intern.internStatus === "pending"
-          );
-        } else if (user?.role === "mentor") {
-          // Mentors should only see "pending" interns with matching requestedMentorId
-          filteredInterns = filteredInterns.filter(
-            (intern) =>
-              intern.internStatus === "pending" &&
-              intern.requestedMentorIds?.includes(user?._id)
-          );
-        }
-
-        setInterns(filteredInterns);
+      const data = await res.json();
+      if (res.ok) {
+        setInterns(data?.data?.intern || []);
       } else {
         toast.error("Failed to fetch interns");
       }
-    } catch (error) {
-      toast.error(
-        error?.message || "Something went wrong while fetching interns!!",
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-        }
-      );
+    } catch (err) {
+      toast.error(err.message || "Error fetching interns");
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetching mentors along with department
+  // Filtered interns
+  const filteredInterns = useMemo(() => {
+    if (!user) return [];
+
+    if (user.role === "hr") {
+      return interns.filter(
+        (i) => i.internStatus === "new" || i.internStatus === "pending"
+      );
+    }
+
+    if (user.role === "mentor") {
+      return interns.filter(
+        (i) =>
+          i.internStatus === "pending" &&
+          i.requestedMentorIds?.includes(user._id)
+      );
+    }
+
+    return [];
+  }, [interns, user]);
+
+  // Fetch mentors and departments
   const fetchMentors = async () => {
     try {
-      const [userResponse, departmentResponse] = await Promise.all([
+      const [res1, res2] = await Promise.all([
         fetch("http://localhost:7000/api/v1/auth/mentor-data"),
         fetch("http://localhost:7000/api/v1/departments/get-departments"),
       ]);
 
-      const userData = await userResponse.json();
-      const departmentData = await departmentResponse.json();
+      const data1 = await res1.json();
+      const data2 = await res2.json();
 
-      if (userResponse.ok && departmentResponse.ok) {
-        setMentors(userData?.data?.user || []);
-        setDepartments(departmentData?.data?.department || []);
+      if (res1.ok && res2.ok) {
+        setMentors(data1?.data?.user || []);
+        setDepartments(data2?.data?.department || []);
       } else {
-        setError("Failed to fetch mentors or departments");
+        setError("Failed to load mentors or departments");
       }
     } catch (err) {
-      setError(err?.message || "Error fetching mentors/departments");
+      setError(err.message);
     } finally {
       setMentorDataLoading(false);
     }
   };
 
-  // Helper Function to get Mentors' Department name
-  const getDepartmentName = (deptId) => {
-    if (!deptId || !Array.isArray(departments) || departments.length === 0) {
-      return "UNKNOWN DEPARTMENT";
-    }
-
-    const dept = departments.find((d) => d._id === deptId);
-    return dept?.departmentName?.toUpperCase() || "UNKNOWN DEPARTMENT";
+  // Get department name
+  const getDepartmentName = (id) => {
+    const dept = departments.find((d) => d._id === id);
+    return dept?.departmentName?.toUpperCase() || "UNKNOWN";
   };
 
-  // onAssign Mentor
+  // Assign mentor
   const onMentorAssign = async (mentorId, internId, mentorName, internName) => {
-    if (user?.role !== "hr") {
-      toast.error("Only HR can assign mentors.");
-      return;
-    }
-
-    const mentor = mentors.find((m) => m._id === mentorId);
-    const departmentName = getDepartmentName(mentor?.departmentId);
-
-    const confirmed = window.confirm(
-      `Are you sure you want to request\n${mentorName} (${departmentName}) as the mentor for\n${internName}?`
+    const deptName = getDepartmentName(
+      mentors.find((m) => m._id === mentorId)?.departmentId
     );
-    if (!confirmed) return;
+
+    const confirm = window.confirm(
+      `Confirm mentor request:\n${mentorName} (${deptName}) for ${internName}?`
+    );
+    if (!confirm) return;
 
     try {
-      const response = await fetch(
+      const res = await fetch(
         "http://localhost:7000/api/v1/interns/request-mentor",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ internId, mentorId }),
         }
       );
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (response.ok) {
-        toast.success("Mentor request sent successfully!", {
-          position: "bottom-right",
-          autoClose: 3000,
-        });
+      if (res.ok) {
+        toast.success("Mentor requested!");
+        setHrShowModal(false); // move here
         fetchInterns();
       } else {
-        toast.error(data?.message || "Failed to send mentor request.", {
-          position: "bottom-right",
-          autoClose: 3000,
-        });
+        toast.error(data?.message || "Request failed.");
       }
     } catch (err) {
-      toast.error(err.message || "An error occurred.", {
-        position: "bottom-right",
-        autoClose: 3000,
-      });
+      toast.error(err.message || "An error occurred.");
     }
   };
 
-  // onAccept Mentor
+  // onAccept intern
   const onAccept = async (internId, mentorId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to accept this intern?"
-    );
-    if (!confirmed) return;
+    if (!window.confirm("Accept this intern?")) return;
+    if (loading) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch(
+        "http://localhost:7000/api/v1/interns/mentor-accept",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ internId, mentorId }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("Intern accepted!");
+        fetchInterns();
+      } else {
+        toast.error(data?.message || "Accept failed.");
+      }
+    } catch (err) {
+      console.error("Accept Intern Error:", err);
+      toast.error(err?.message || "An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // onReject intern
+  const onReject = async (
+    internId,
+    mentorId,
+    remarks,
+    suggestedMentorId = null
+  ) => {
+    if (!window.confirm("Reject this intern?")) return;
 
     try {
       const response = await fetch(
-        `http://localhost:7000/api/v1/interns/mentor-accept`,
+        "http://localhost:7000/api/v1/interns/mentor-reject",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             internId,
-            mentorId: user?.role === "mentor" ? mentorId : "",
+            mentorId,
+            remarks,
+            suggestedMentorId,
           }),
         }
       );
@@ -196,70 +212,19 @@ function NewInterns() {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success("Intern accepted successfully!", {
-          position: "bottom-right",
-          autoClose: 3000,
-        });
-        fetchInterns();
+        toast.success("Intern rejected successfully");
+        setRejectModalOpen(false);
+        fetchInterns(); // Refresh the intern list
       } else {
-        toast.error(data?.message || "Failed to accept intern.", {
-          position: "bottom-right",
-          autoClose: 3000,
-        });
+        toast.error(data.message || "Failed to reject intern");
       }
-    } catch (err) {
-      toast.error(err.message || "An error occurred.", {
-        position: "bottom-right",
-        autoClose: 3000,
-      });
+    } catch (error) {
+      console.error("Error rejecting intern:", error);
+      toast.error("An error occurred while rejecting the intern");
     }
   };
 
-  // onReject Mentor
-  const onReject = async (internId, mentorId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to reject this intern?"
-    );
-    if (!confirmed) return;
-
-    try {
-      const response = await fetch(
-        `http://localhost:7000/api/v1/interns/mentor-reject`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            internId,
-            mentorId: user?.role === "mentor" ? mentorId : "",
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success("Intern rejected successfully!", {
-          position: "bottom-right",
-          autoClose: 3000,
-        });
-        fetchInterns();
-      } else {
-        toast.error(data?.message || "Failed to reject intern.", {
-          position: "bottom-right",
-          autoClose: 3000,
-        });
-      }
-    } catch (err) {
-      toast.error(err.message || "An error occurred.", {
-        position: "bottom-right",
-        autoClose: 3000,
-      });
-    }
-  };
-
-  // useEffects
+  // Initial effects
   useEffect(() => {
     fetchCurrentUser();
   }, []);
@@ -271,15 +236,14 @@ function NewInterns() {
     }
   }, [user]);
 
-  // Messages
   if (!user) return <div>Loading user info...</div>;
   if (loading || mentorDataLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
-      {interns.length === 0 ? (
-        <p>No new interns to display.</p>
+      {filteredInterns.length === 0 ? (
+        <p>No interns to display.</p>
       ) : (
         <table className="newInternTable">
           <thead>
@@ -290,14 +254,14 @@ function NewInterns() {
               <th>Phone</th>
               <th>College</th>
               <th>Course</th>
-              <th>Internship Duration</th>
-              <th>Intern Status</th>
-              <th>Joined On</th>
-              {user?.role === "hr" ? <th>Assign Mentor</th> : <th>Action</th>}
+              <th>Duration</th>
+              <th>Status</th>
+              <th>Joined</th>
+              <th>{user.role === "hr" ? "Assign Mentor" : "Action"}</th>
             </tr>
           </thead>
           <tbody>
-            {interns.map((intern) => (
+            {filteredInterns.map((intern) => (
               <tr key={intern._id}>
                 <td>{intern.fullName}</td>
                 <td>{intern.age}</td>
@@ -307,61 +271,29 @@ function NewInterns() {
                 <td>{intern.course}</td>
                 <td>{intern.duration}</td>
                 <td>{intern.internStatus.toUpperCase()}</td>
-
+                <td>{new Date(intern.createdAt).toLocaleDateString()}</td>
                 <td>
-                  {new Date(intern.createdAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </td>
-
-                <td>
-                  {user?.role === "hr" ? (
-                    <select
-                      value={intern.mentor || ""}
-                      onChange={(e) => {
-                        const selectedMentorId = e.target.value;
-                        const selectedMentor = mentors.find(
-                          (m) => m._id === selectedMentorId
-                        );
-                        onMentorAssign(
-                          selectedMentorId,
-                          intern._id,
-                          selectedMentor?.fullName,
-                          intern.fullName
-                        );
+                  {user.role === "hr" ? (
+                    <button
+                      className="openModalBtn"
+                      onClick={() => {
+                        setSelectedIntern(intern);
+                        setSelectedMentorId("");
+                        setHrShowModal(true);
                       }}
                     >
-                      <option value="">Assign Mentor</option>
-                      {departments.length > 0 &&
-                        mentors.map((mentor) => {
-                          const deptName = getDepartmentName(
-                            mentor.departmentId
-                          );
-                          return (
-                            <option key={mentor._id} value={mentor._id}>
-                              {mentor.fullName} ({deptName})
-                            </option>
-                          );
-                        })}
-                    </select>
+                      Assign
+                    </button>
                   ) : (
-                    <div className="flex-cen-all action-btn">
+                    <div className="flex-cen-all">
                       <button
-                        type="button"
-                        className="accept-btn"
-                        onClick={() => onAccept(intern._id, user._id)}
+                        className="openModalBtn"
+                        onClick={() => {
+                          setSelectedIntern(intern);
+                          setMentorModalOpen(true);
+                        }}
                       >
-                        Accept
-                      </button>
-                      /
-                      <button
-                        type="button"
-                        className="reject-btn"
-                        onClick={() => onReject(intern._id, user._id)}
-                      >
-                        Reject
+                        DETAILS
                       </button>
                     </div>
                   )}
@@ -371,7 +303,210 @@ function NewInterns() {
           </tbody>
         </table>
       )}
-      <ToastContainer />
+
+      {/* ASSIGN MENTOR MODAL */}
+      {hrShowModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Assign Mentor to {selectedIntern?.fullName}</h3>
+            <select
+              value={selectedMentorId}
+              onChange={(e) => setSelectedMentorId(e.target.value)}
+            >
+              <option value="">Select Mentor</option>
+              {mentors.map((mentor) => (
+                <option key={mentor._id} value={mentor._id}>
+                  {mentor.fullName} ({getDepartmentName(mentor.departmentId)})
+                </option>
+              ))}
+            </select>
+            <div className="assign-modal-buttons">
+              <button
+                onClick={() => {
+                  const mentor = mentors.find(
+                    (m) => m._id === selectedMentorId
+                  );
+                  if (!mentor || !selectedIntern) {
+                    toast.error("Please select a mentor.");
+                    return;
+                  }
+                  onMentorAssign(
+                    mentor._id,
+                    selectedIntern._id,
+                    mentor.fullName,
+                    selectedIntern.fullName
+                  );
+                }}
+              >
+                Confirm
+              </button>
+              <button onClick={() => setHrShowModal(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MENTOR ACTION MODAL */}
+      {mentorModalOpen && selectedIntern && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="flex-cen-all modal-header">
+              <h3>Intern Details</h3>
+              {/* Close button on top-left */}
+              <button
+                className="modal-close-btn"
+                onClick={() => setMentorModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="internDetails">
+              <p>
+                <strong>Name:</strong> {selectedIntern.fullName}
+              </p>
+              <p>
+                <strong>Age:</strong> {selectedIntern.age}
+              </p>
+              <p>
+                <strong>Email:</strong> {selectedIntern.email}
+              </p>
+              <p>
+                <strong>Phone:</strong> {selectedIntern.phone}
+              </p>
+              <p>
+                <strong>College:</strong> {selectedIntern.college}
+              </p>
+              <p>
+                <strong>Course:</strong> {selectedIntern.course}
+              </p>
+              <p>
+                <strong>Duration:</strong> {selectedIntern.duration}
+              </p>
+            </div>
+
+            <div className="assign-modal-buttons">
+              <button
+                className="accept-btn"
+                onClick={() => {
+                  if (!loading) {
+                    onAccept(selectedIntern._id, user._id);
+                    setMentorModalOpen(false);
+                  }
+                }}
+                disabled={loading}
+              >
+                {loading ? "Processing..." : "Accept"}
+              </button>
+
+              <button
+                className="reject-btn"
+                onClick={() => {
+                  setRejectModalOpen(true);
+                  setMentorModalOpen(false);
+                  setSelectedInternId(selectedIntern._id);
+                }}
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MENTOR REJECT MODAL */}
+      {rejectModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="flex-cen-all modal-header">
+              <h3>Reject Intern</h3>
+              <button
+                className="modal-close-btn"
+                onClick={() => setRejectModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="internRemarks">
+              <label>
+                <strong>Remarks:</strong>
+                <textarea
+                  value={rejectionRemarks}
+                  onChange={(e) => setRejectionRemarks(e.target.value)}
+                  placeholder="Enter reason for rejection"
+                  rows={4}
+                />
+              </label>
+
+              <label>
+                <strong>Suggest Mentor (Optional):</strong>
+                <select
+                  value={suggestedMentorId}
+                  onChange={(e) => setSuggestedMentorId(e.target.value)}
+                >
+                  <option value="">-- Select Mentor --</option>
+                  {mentors.map((mentor) => (
+                    <option key={mentor._id} value={mentor._id}>
+                      {mentor.fullName} (
+                      {getDepartmentName(mentor.departmentId)})
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <div className="assign-modal-buttons">
+              <button
+                className="reject-btn"
+                onClick={() => {
+                  if (!rejectionRemarks.trim()) {
+                    toast.error("Please provide remarks for rejection.");
+                    return;
+                  }
+
+                  onReject(
+                    selectedInternId,
+                    user._id,
+                    rejectionRemarks,
+                    suggestedMentorId || null
+                  );
+
+                  // Reset modal state
+                  setRejectionRemarks("");
+                  setSuggestedMentorId("");
+                  setSelectedInternId(null);
+                }}
+              >
+                Submit
+              </button>
+              <button
+                onClick={() => {
+                  setRejectModalOpen(false);
+                  setRejectionRemarks("");
+                  setSuggestedMentorId("");
+                  setSelectedInternId(null);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }

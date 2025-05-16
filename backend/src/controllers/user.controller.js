@@ -285,7 +285,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 // Get All Mentors
-const getMentorData = asyncHandler(async (req, res) => {
+const getMentorData = asyncHandler(async (_, res) => {
     try {
         const mentors = await User.find({ role: "mentor" }).select(
             "-password -refreshToken"

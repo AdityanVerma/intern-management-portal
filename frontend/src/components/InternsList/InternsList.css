@@ -58,24 +58,145 @@ select {
     width: 90%;
 }
 
-.action-btn button {
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    margin: 0 5px;
-    padding: 3px;
-    transition: all 100ms linear;
-}
-.action-btn .accept-btn {
-    color: green;
-}
-.action-btn .reject-btn {
-    color: rgb(230, 39, 39);
-}
-.action-btn .accept-btn:hover,
-.action-btn .reject-btn:hover {
+.assignBtn {
+    background-color: var(--dark-text);
+    color: var(--light-bg);
+    width: 67%;
+    padding: 9px 0px;
     font-size: 1rem;
+    border-radius: 10px;
 }
+
+/* MODAL OVERLAY */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* MODAL CONTENT */
+.modal-content {
+    background-color: var(--light-bg);
+    padding: 20px;
+    border-radius: 8px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+    color: var(--dark-text);
+    margin-bottom: 15px;
+}
+
+/* DROPDOWN */
+.modal-content select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* INTERN DETAILS */
+.internDetails {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 10px 0;
+    gap: 5px;
+}
+
+/* INTERN REMARKS */
+.internRemarks {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 10px 0;
+    gap: 20px;
+}
+
+.internRemarks label {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 10px;
+}
+
+.internRemarks label textarea {
+    height: 100px;
+    padding: 10px;
+}
+
+/* CONFIRM BUTTON */
+.assign-modal-buttons button:first-child {
+    background-color: #4CAF50;
+    font-size: 1rem;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.assign-modal-buttons button:first-child:hover {
+    background-color: #45a049;
+}
+
+/* CANCEL BUTTON */
+.assign-modal-buttons button:last-child {
+    background-color: red;
+    font-size: 1rem;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.assign-modal-buttons button:last-child:hover {
+    background-color: #d9534f;
+}
+
+/* MODAL HEADER */
+.modal-header {
+    position: relative;
+}
+
+.modal-header h3 {
+    color: var(--dark-text);
+    margin-bottom: 15px;
+}
+
+.modal-header .modal-close-btn {
+    position: absolute;
+    width: 18px;
+    top: -20px;
+    right: 0;
+    border: none;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s ease;
+}
+
+.modal-header .modal-close-btn:hover {
+    color: #e74c3c;
+}
+
 
 /* <-------------- Undergoing Intern List --------------> */
 .undergoingInternTable tr {
@@ -83,8 +204,8 @@ select {
 }
 
 .updateStatusBtn {
-    background-color: rgb(32, 153, 113);
-    color: rgb(236, 236, 236);
+    background-color: var(--dark-text);
+    color: var(--light-bg);
     width: 67%;
     padding: 9px 0px;
     font-size: 1rem;
@@ -99,4 +220,14 @@ select {
 /* <-------------- Certified Intern List --------------> */
 .undergoingInternTable tr {
     grid-template-columns: repeat(10, 1fr);
+}
+
+/* <-------------- UNIVERSAL CLASSES --------------> */
+.openModalBtn {
+    background-color: var(--dark-text);
+    color: var(--light-bg);
+    width: 67%;
+    padding: 9px 0px;
+    font-size: 1rem;
+    border-radius: 10px;
 }

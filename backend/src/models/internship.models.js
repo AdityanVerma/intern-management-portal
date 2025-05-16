@@ -13,7 +13,7 @@ const internshipSchema = new Schema(
             required: true,
         },
         departmentId: {
-            type: Schema.Types.ObjectId,
+            type: String,
             ref: "Department",
             required: true,
         },
