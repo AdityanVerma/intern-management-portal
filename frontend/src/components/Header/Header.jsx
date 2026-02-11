@@ -51,7 +51,7 @@ function Header({ loginAs }) {
 
   return (
     <header>
-      <h1>DRDO Internship Management Portal</h1>
+      <h1>Internship Management Portal</h1>
       {!isLoginPage && (
         <div style={{ position: "relative" }}>
           <button
