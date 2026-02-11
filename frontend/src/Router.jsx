@@ -17,8 +17,10 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<PublicLayout />}>
+        <Route index element={<Navigate to="login" replace />} />
         <Route path="login" element={<Login />} />
       </Route>
+
 
       <Route path="/user/:userid">
         <Route path="mentor" element={<MentorPage />}>
