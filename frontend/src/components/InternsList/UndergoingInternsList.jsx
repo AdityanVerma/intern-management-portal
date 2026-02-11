@@ -40,7 +40,7 @@ function NewInterns() {
   const fetchMentors = useCallback(async () => {
     try {
       const response = await fetch(
-        "http://localhost:7000/api/v1/auth/mentor-data"
+        "https://intern-management-portal-api-backend.onrender.com/api/v1/auth/mentor-data"
       );
 
       const mentor = await response.json();
@@ -61,7 +61,7 @@ function NewInterns() {
   const fetchInterns = useCallback(async () => {
     try {
       const response = await fetch(
-        "http://localhost:7000/api/v1/interns/interns-data",
+        "https://intern-management-portal-api-backend.onrender.com/api/v1/interns/interns-data",
         {
           method: "GET",
           headers: {
