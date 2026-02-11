@@ -21,7 +21,7 @@ export default function Login() {
 
     // Send login request to backend
     try {
-      const response = await fetch("http://localhost:7000/api/v1/auth/login", {
+      const response = await fetch("https://intern-management-portal-api-backend.onrender.com/api/v1/auth/login", {
         method: "POST",
         credentials: "include",
         headers: {

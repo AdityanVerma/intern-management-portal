@@ -12,7 +12,7 @@ function NewInterns() {
   const fetchCurrentUser = async () => {
     try {
       const response = await fetch(
-        "http://localhost:7000/api/v1/auth/current-user",
+        "https://intern-management-portal-api-backend.onrender.com/api/v1/auth/current-user",
         {
           method: "GET",
           credentials: "include",
@@ -37,7 +37,7 @@ function NewInterns() {
   const fetchInterns = useCallback(async () => {
     try {
       const response = await fetch(
-        "http://localhost:7000/api/v1/interns/interns-data",
+        "https://intern-management-portal-api-backend.onrender.com/api/v1/interns/interns-data",
         {
           method: "GET",
           headers: {

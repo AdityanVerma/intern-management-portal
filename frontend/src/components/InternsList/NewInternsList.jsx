@@ -28,7 +28,7 @@ function NewInterns() {
   const fetchCurrentUser = async () => {
     try {
       const res = await fetch(
-        "http://localhost:7000/api/v1/auth/current-user",
+        "https://intern-management-portal-api-backend.onrender.com/api/v1/auth/current-user",
         {
           method: "GET",
           credentials: "include",
@@ -47,7 +47,7 @@ function NewInterns() {
   const fetchInterns = async () => {
     try {
       const res = await fetch(
-        "http://localhost:7000/api/v1/interns/interns-data",
+        "https://intern-management-portal-api-backend.onrender.com/api/v1/interns/interns-data",
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -92,8 +92,8 @@ function NewInterns() {
   const fetchMentors = async () => {
     try {
       const [res1, res2] = await Promise.all([
-        fetch("http://localhost:7000/api/v1/auth/mentor-data"),
-        fetch("http://localhost:7000/api/v1/departments/get-departments"),
+        fetch("https://intern-management-portal-api-backend.onrender.com/api/v1/auth/mentor-data"),
+        fetch("https://intern-management-portal-api-backend.onrender.com/api/v1/departments/get-departments"),
       ]);
 
       const data1 = await res1.json();
@@ -131,7 +131,7 @@ function NewInterns() {
 
     try {
       const res = await fetch(
-        "http://localhost:7000/api/v1/interns/request-mentor",
+        "https://intern-management-portal-api-backend.onrender.com/api/v1/interns/request-mentor",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -161,7 +161,7 @@ function NewInterns() {
     setLoading(true);
     try {
       const res = await fetch(
-        "http://localhost:7000/api/v1/interns/mentor-accept",
+        "https://intern-management-portal-api-backend.onrender.com/api/v1/interns/mentor-accept",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -196,7 +196,7 @@ function NewInterns() {
 
     try {
       const response = await fetch(
-        "http://localhost:7000/api/v1/interns/mentor-reject",
+        "https://intern-management-portal-api-backend.onrender.com/api/v1/interns/mentor-reject",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -15,7 +15,7 @@ function Header({ loginAs }) {
     try {
       const token = localStorage.getItem("accessToken");
 
-      const response = await fetch("http://localhost:7000/api/v1/auth/logout", {
+      const response = await fetch("https://intern-management-portal-api-backend.onrender.com/api/v1/auth/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
