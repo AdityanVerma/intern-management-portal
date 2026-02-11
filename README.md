@@ -8,8 +8,7 @@ _Full-stack web application designed to streamline the internship lifecycle proc
 HR: `john.doe@company.com` | Password: `securePass!2025`  
 Mentor: `alice.smith@company.com` | Password: `mentorPass1CSE!2025`
 
-⚠️ Note: Backend is hosted on Render free tier and may take a few seconds to wake up.  
-🛠 Built with the MERN Stack | 🔐 JWT Authentication | ☁️ Cloudinary Integration
+⚠️ Note: Backend is hosted on Render free tier and may take a few seconds to wake up.
 
 ---
 
@@ -20,9 +19,9 @@ Mentor: `alice.smith@company.com` | Password: `mentorPass1CSE!2025`
 - [Tech Stack](#-tech-stack)
 - [Security Implementation](#-security-implementation)
 - [Project Architecture](#-project-architecture)
+- [Deployment](#-deployment)
 - [Environment Variables](#-environment-variables)
 - [Installation \& Setup](#-installation--setup)
-- [Demo Credentials](#-demo-credentials)
 - [Future Improvements](#-future-improvements)
 - [Author](#-author)
 
@@ -129,7 +128,6 @@ New → [Assign Mentor] → Undergoing → Completed → Certification
 - Environment-based Configuration
 - Cloudinary Secure Media Upload
 
-
 ---
 
 ## 🖼 Project Architecture
@@ -140,6 +138,15 @@ New → [Assign Mentor] → Undergoing → Completed → Certification
 
 ### 🔹 ER Diagram (Database Design)
 ![Intern.Management.Portal.ER.Diagram](./images/Intern.Management.Portal.ER.Diagram.png)
+
+---
+
+## 🚀 Deployment
+
+- Frontend: Vercel
+- Backend: Render
+- Database: MongoDB Atlas
+- Media Storage: Cloudinary
 
 ---
 
@@ -208,16 +215,6 @@ CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
-
----
-
-## 🔑 Demo Credentials
-
-HR Login  
-Email: hr@test.com  
-Password: 123456
-
-
 ---
 
 ## 🔮 Future Improvements
@@ -231,11 +228,8 @@ Password: 123456
 
 ## 👨‍💻 Author
 
-Adityan Verma | Web Developer
+Adityan Verma | Web Developer  
 
-
-GitHub: https://github.com/AdityanVerma
-
-LinkedIn: https://www.linkedin.com/in/adityan-verma/
-
+GitHub: https://github.com/AdityanVerma  
+LinkedIn: https://www.linkedin.com/in/adityan-verma/  
 Email: adityanvermaa@gmail.com
