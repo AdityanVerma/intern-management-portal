@@ -10,7 +10,10 @@ const app = express();
 app.use(
     cors({
         // origin: process.env.CORS_ORIGIN,
-        origin: "http://localhost:5173",
+        origin: [
+            "http://localhost:5173",
+            "https://intern-management-portal-alpha.vercel.app"
+        ],
         credentials: true,
     })
 ); // To allow data access to specific request or every request coming

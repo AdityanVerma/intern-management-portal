@@ -143,8 +143,9 @@ const loginUser = asyncHandler(async (req, res) => {
     );
     const options = {
         httpOnly: true,
-        secure: false, // DevOnly
-        // secure: true, // Only work with https
+        // secure: false, // DevOnly
+        secure: true, // Only work with https
+        sameSite: "none"
     };
 
     // // Dev Check
@@ -187,6 +188,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: true,
+        sameSite: "none"
     };
     console.log(" ->  Logout Successful!!");
     return res
@@ -227,6 +229,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         const options = {
             httpOnly: true,
             secure: true,
+            sameSite: "none"
             // sameSite: 'Strict',  // Recommended for enhanced security
         };
         const { accessToken, newRefreshToken } =
