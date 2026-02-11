@@ -2,18 +2,23 @@
 
 _Full-stack web application designed to streamline the internship lifecycle process — from onboarding to completion — with role-based dashboards for HR and Mentors._
 
-<!-- 🚀 **Live Demo:** https://your-vercel-link  
-🔗 **Backend API:** https://your-render-link -->
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=for-the-badge)](https://intern-management-portal-alpha.vercel.app)
+
+🔑 **Demo Access**  
+HR: `john.doe@company.com` | Password: `securePass!2025`  
+Mentor: `alice.smith@company.com` | Password: `mentorPass1CSE!2025`
+
+⚠️ Note: Backend is hosted on Render free tier and may take a few seconds to wake up.  
+🛠 Built with the MERN Stack | 🔐 JWT Authentication | ☁️ Cloudinary Integration
 
 ---
 
 ## 📑 Table of Contents
-- [Table of Contents](#-table-of-contents)
 - [Overview](#-overview)
 - [Problem Statement](#-problem-statement)
 - [Core Features](#-core-features)
-- [Security Implementation](#-security-implementation)
 - [Tech Stack](#-tech-stack)
+- [Security Implementation](#-security-implementation)
 - [Project Architecture](#-project-architecture)
 - [Environment Variables](#-environment-variables)
 - [Installation \& Setup](#-installation--setup)
@@ -86,17 +91,6 @@ New → [Assign Mentor] → Undergoing → Completed → Certification
 
 ---
 
-## 🛡 Security Implementation
-
-- JWT-based Authentication
-- Access & Refresh Token Strategy
-- Protected Routes via Middleware
-- Environment-based Configuration
-- Cloudinary Secure Media Upload
-
-
----
-
 ## 🛠 Tech Stack
 
 ### 🎨 Frontend
@@ -127,6 +121,17 @@ New → [Assign Mentor] → Undergoing → Completed → Certification
 
 ---
 
+## 🛡 Security Implementation
+
+- JWT-based Authentication
+- Access & Refresh Token Strategy
+- Protected Routes via Middleware
+- Environment-based Configuration
+- Cloudinary Secure Media Upload
+
+
+---
+
 ## 🖼 Project Architecture
 
 ### 🔹 Project Flow Diagram
@@ -138,30 +143,10 @@ New → [Assign Mentor] → Undergoing → Completed → Certification
 
 ---
 
-## 🔐 Environment Variables
-
-Create a `.env` file inside the `backend` directory and add:
-
-```
-PORT=7000
-CORS_ORIGIN=*
-
-MONGODB_URI=your_mongodb_connection_string
-
-ACCESS_TOKEN_SECRET=your_access_token_secret
-ACCESS_TOKEN_EXPIRY=1d
-
-REFRESH_TOKEN_SECRET=your_refresh_token_secret
-REFRESH_TOKEN_EXPIRY=10d
-
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-```
-
----
-
 ## 🧑‍💻 Installation & Setup
+
+If you prefer to run locally instead of using the live demo:
+
 
 ### 1️⃣ Clone Repository
 
@@ -199,6 +184,29 @@ npm run dev
 App runs at:
 ```bash
 http://localhost:3000
+```
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file inside the `backend` directory and add:
+
+```
+PORT=7000
+CORS_ORIGIN=*
+
+MONGODB_URI=your_mongodb_connection_string
+
+ACCESS_TOKEN_SECRET=your_access_token_secret
+ACCESS_TOKEN_EXPIRY=1d
+
+REFRESH_TOKEN_SECRET=your_refresh_token_secret
+REFRESH_TOKEN_EXPIRY=10d
+
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
 
 ---
